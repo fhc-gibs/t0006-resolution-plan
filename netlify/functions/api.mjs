@@ -2,10 +2,7 @@
 import { getStore } from '@netlify/blobs';
 import { makeHandler } from '../lib/handler.mjs';
 
-const handler = makeHandler(
-  () => getStore({ name: 't0006-feedback', consistency: 'strong' }),
-  { ADMIN_KEY: process.env.ADMIN_KEY },
-);
+const handler = makeHandler(() => getStore({ name: 't0006-feedback', consistency: 'strong' }));
 
 export default async (req) => {
   try { return await handler(req); }
