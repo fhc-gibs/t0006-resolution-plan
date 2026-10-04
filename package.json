@@ -1,0 +1,8 @@
+{
+  "name": "t0006-feedback-form",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "T0006 resolution plan feedback form for Netlify",
+  "dependencies": { "@netlify/blobs": "^8.1.0" }
+}

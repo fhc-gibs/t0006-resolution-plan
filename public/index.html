@@ -1,0 +1,740 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<meta name="robots" content="noindex,nofollow">
+<title>T0006 Resolution Plan</title>
+<style>
+
+  /* Layout: single column of item cards (max 960px); each card carries its own live response groups. */
+  :root{
+    --bg:#f7f5f1; --surface:#ffffff; --surface-2:#f0ede6; --border:#ddd7cb; --border-strong:#c9c1b1;
+    --ink:#2a251d; --dim:#6b6253; --accent:#8a5a2b; --accent-ink:#ffffff;
+    --warn-bg:#fbeee0; --warn-border:#d9a86c; --warn-ink:#6b3e10;
+    --done-bg:#e9f0e6; --done-border:#a9c79c; --done-ink:#3c5c33;
+    --field-bg:#ffffff; --field-locked:#f0ede6; --ph:#7a7468; --danger:#a3321f; --live:#3c8a3c; --idle:#8a8374;
+    --shadow:0 1px 2px rgba(40,30,10,.06);
+    color-scheme:light;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#1b1812; --surface:#242019; --surface-2:#2c2720; --border:#3c352a; --border-strong:#51483a;
+      --ink:#ede7da; --dim:#aca290; --accent:#d59a5c; --accent-ink:#1b1812;
+      --warn-bg:#352515; --warn-border:#7a4e22; --warn-ink:#e8bd84;
+      --done-bg:#1f2a1c; --done-border:#3d5635; --done-ink:#9fc48f;
+      --field-bg:#1b1812; --field-locked:#2c2720; --ph:#9a917f; --danger:#ef8a77; --live:#6cc06c; --idle:#8a8374;
+      --shadow:none; color-scheme:dark;
+    }
+  }
+  :root[data-theme="dark"]{
+      --bg:#1b1812; --surface:#242019; --surface-2:#2c2720; --border:#3c352a; --border-strong:#51483a;
+      --ink:#ede7da; --dim:#aca290; --accent:#d59a5c; --accent-ink:#1b1812;
+      --warn-bg:#352515; --warn-border:#7a4e22; --warn-ink:#e8bd84;
+      --done-bg:#1f2a1c; --done-border:#3d5635; --done-ink:#9fc48f;
+      --field-bg:#1b1812; --field-locked:#2c2720; --ph:#9a917f; --danger:#ef8a77; --live:#6cc06c; --idle:#8a8374;
+      --shadow:none; color-scheme:dark;
+  }
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{
+    margin:0; background:var(--bg); color:var(--ink);
+    font-family:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+    line-height:1.5;
+    padding:0 16px 40px;
+  }
+  .wrap{max-width:960px; margin:0 auto; padding-top:24px}
+  h1,h2{font-family:Georgia,"Times New Roman",serif; font-weight:600; text-wrap:balance}
+  h1{font-size:clamp(1.35rem,4.5vw,1.8rem); margin:0 0 6px; line-height:1.2}
+  h2{font-size:1.15rem; margin:0}
+  p{margin:0}
+  button{font:inherit; color:inherit}
+  :focus-visible{outline:2px solid var(--accent); outline-offset:2px}
+
+  .subtitle{color:var(--dim); font-size:.93rem; margin-bottom:14px}
+  .chips{display:flex; flex-wrap:wrap; gap:8px; margin-bottom:14px}
+  .chip{font-size:.78rem; color:var(--dim); background:var(--surface-2); border:1px solid var(--border); border-radius:6px; padding:3px 9px}
+
+  .actions{display:flex; flex-wrap:wrap; gap:8px; margin:14px 0 6px}
+  .btn{
+    appearance:none; cursor:pointer; background:var(--surface); border:1px solid var(--border-strong);
+    border-radius:8px; padding:8px 14px; font-size:.88rem; font-weight:600; min-height:40px;
+  }
+  .btn:hover{background:var(--surface-2)}
+  .btn-primary{background:var(--accent); border-color:var(--accent); color:var(--accent-ink)}
+  .btn-primary:hover{background:var(--accent); filter:brightness(1.08)}
+  .statusline{font-size:.82rem; color:var(--dim); display:flex; flex-wrap:wrap; gap:4px 14px; align-items:center; margin-bottom:6px}
+  .sync{display:inline-flex; align-items:center; gap:6px; font-weight:600}
+  .sync::before{content:""; width:9px; height:9px; border-radius:50%; background:#3c8a3c}
+  .sync.dirty::before{background:#d08a1a}
+
+  details.howto{background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:10px 14px; margin:14px 0 6px; font-size:.9rem}
+  details.howto summary{cursor:pointer; font-weight:600}
+  details.howto ol{margin:8px 0 0; padding-left:20px}
+  details.howto li{margin:3px 0}
+
+  nav.jump{display:flex; flex-wrap:wrap; gap:8px; margin:16px 0 4px}
+  nav.jump a{
+    text-decoration:none; color:var(--ink); background:var(--surface); border:1px solid var(--border);
+    border-radius:999px; padding:5px 12px; font-size:.82rem; font-weight:600; min-height:32px; display:inline-flex; align-items:center;
+  }
+  nav.jump a:hover{background:var(--surface-2)}
+
+  .callout{background:var(--warn-bg); border:1px solid var(--warn-border); color:var(--warn-ink); border-radius:10px; padding:14px 16px; margin:18px 0 8px; font-size:.93rem}
+  .callout strong{display:block; font-family:Georgia,serif; margin-bottom:4px}
+
+  section.sec{margin-top:30px; scroll-margin-top:12px}
+  .sec-head{display:flex; flex-wrap:wrap; align-items:baseline; gap:6px 10px; margin-bottom:4px}
+  .owner{font-size:.7rem; font-weight:700; letter-spacing:.04em; text-transform:uppercase; border-radius:999px; padding:2px 10px; background:var(--surface-2); border:1px solid var(--border); color:var(--dim)}
+  .sec-sub{color:var(--dim); font-size:.86rem; margin-bottom:12px}
+
+  .items{display:flex; flex-direction:column; gap:14px}
+  article.item{background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:14px 16px; box-shadow:var(--shadow)}
+  .item-head{display:flex; gap:10px; align-items:flex-start}
+  .num{
+    flex:none; min-width:2.4rem; text-align:center; font-weight:700; font-size:.82rem; color:var(--accent-ink);
+    background:var(--accent); border-radius:6px; padding:2px 6px; margin-top:2px;
+  }
+  .item-text{font-size:.96rem; flex:1; min-width:0}
+  .pill{
+    flex:none; font-size:.66rem; font-weight:700; letter-spacing:.04em; text-transform:uppercase; white-space:nowrap;
+    color:var(--done-ink); background:var(--done-bg); border:1px solid var(--done-border); border-radius:999px; padding:2px 9px; margin-top:3px;
+  }
+  .tags{display:flex; flex-wrap:wrap; gap:6px; margin:8px 0 0 calc(2.4rem + 10px)}
+  .tag{font-size:.72rem; color:var(--dim); background:var(--surface-2); border:1px solid var(--border); border-radius:5px; padding:1px 7px}
+  .tag.pg{font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
+  .finding{margin:10px 0 0; border-radius:8px; padding:9px 12px; font-size:.86rem; line-height:1.45; border:1px solid var(--border); background:var(--surface-2)}
+  .finding.ok{background:var(--done-bg); border-color:var(--done-border); color:var(--done-ink)}
+  .finding.flag{background:var(--warn-bg); border-color:var(--warn-border); color:var(--warn-ink)}
+  .finding code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace; font-size:.8rem; background:rgba(0,0,0,.06); padding:1px 5px; border-radius:4px}
+  .finding .src{display:block; margin-top:5px; font-size:.75rem; opacity:.85; font-style:italic}
+
+  .resp{margin-top:14px; border-top:1px dashed var(--border-strong); padding-top:12px}
+  .groups{display:flex; flex-direction:column; gap:12px}
+  .grp{border:1px solid var(--border); border-radius:10px; padding:10px 12px; background:var(--surface-2)}
+  .grp[data-state="editing"]{border-color:var(--accent); box-shadow:0 0 0 1px var(--accent)}
+  .grp-head{display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:6px 10px; margin-bottom:8px}
+  .grp-label{font-size:.8rem; font-weight:700; letter-spacing:.02em; color:var(--dim)}
+  .btn-mini{
+    appearance:none; cursor:pointer; border:1px solid var(--border-strong); background:var(--surface); border-radius:6px;
+    padding:3px 12px; font-size:.78rem; font-weight:700; min-height:30px; line-height:1.2;
+  }
+  .btn-mini:hover{background:var(--surface-2)}
+  .grp[data-state="draft"] .btn-mini, .grp[data-state="editing"] .btn-mini{background:var(--accent); border-color:var(--accent); color:var(--accent-ink)}
+  @media (pointer:coarse){ .btn-mini{min-height:38px; padding:5px 16px} }
+
+  .grp-fields{display:grid; grid-template-columns:1fr; gap:8px}
+  @media (min-width:640px){ .grp-fields{grid-template-columns:minmax(150px,220px) 1fr} }
+  .grp input, .grp textarea{
+    width:100%; font:inherit; font-size:16px; color:var(--ink); background:var(--field-bg);
+    border:1px solid var(--border-strong); border-radius:8px; padding:9px 11px; display:block; margin:0;
+  }
+  .grp textarea{min-height:44px; resize:vertical; overflow:hidden; line-height:1.4}
+  .grp input::placeholder, .grp textarea::placeholder{color:var(--ph); font-style:italic; opacity:1}
+  .grp[data-state="locked"] input, .grp[data-state="locked"] textarea{background:var(--field-locked); cursor:default}
+  .grp-meta{font-size:.74rem; color:var(--dim); margin-top:6px}
+  .grp-err{font-size:.8rem; color:var(--danger); margin-top:6px; font-weight:600}
+  .grp-err:empty{display:none}
+
+  .add{
+    appearance:none; cursor:pointer; margin-top:12px; background:transparent; border:1px dashed var(--border-strong);
+    border-radius:8px; padding:8px 14px; font-size:.85rem; font-weight:600; color:var(--accent); min-height:40px;
+  }
+  .add:hover{background:var(--surface-2)}
+
+  footer{margin-top:40px; padding-top:14px; border-top:1px solid var(--border); color:var(--dim); font-size:.78rem}
+
+  .toast{
+    position:fixed; left:50%; bottom:calc(24px + env(safe-area-inset-bottom)); transform:translateX(-50%); z-index:30;
+    background:#2a251d; color:#fff; padding:9px 16px; border-radius:8px; font-size:.86rem; max-width:90vw; opacity:0; pointer-events:none; transition:opacity .2s;
+  }
+  .toast.show{opacity:1}
+
+  dialog{
+    border:1px solid var(--border-strong); border-radius:14px; padding:0; width:min(640px,calc(100vw - 24px)); max-height:85vh;
+    background:var(--surface); color:var(--ink);
+  }
+  dialog::backdrop{background:rgba(0,0,0,.45)}
+  .dlg-head{display:flex; align-items:center; justify-content:space-between; gap:10px; padding:14px 18px; border-bottom:1px solid var(--border); position:sticky; top:0; background:var(--surface)}
+  .dlg-body{padding:6px 18px 18px; overflow:auto; max-height:calc(85vh - 64px)}
+  .dlg-note{font-size:.8rem; color:var(--dim); margin:10px 0}
+  ul.hist{list-style:none; margin:0; padding:0}
+  .hist-row{padding:10px 0; border-bottom:1px solid var(--border)}
+  .hist-top{display:flex; flex-wrap:wrap; gap:4px 10px; align-items:baseline; font-size:.84rem}
+  .hist-act.del{color:var(--danger)}
+  .hist-act{font-weight:600}
+  .hist-top time{color:var(--dim); font-size:.78rem}
+  .hist-who{font-size:.84rem; color:var(--dim)}
+  .hist-snip{font-size:.84rem; font-style:italic; margin-top:2px; overflow-wrap:anywhere}
+  .empty{color:var(--dim); padding:14px 0}
+
+  .sr-only{position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap}
+  noscript p{padding:20px; background:var(--warn-bg); color:var(--warn-ink)}
+
+  .sync{color:var(--dim)}
+  .sync::before{background:var(--idle)!important}
+  .sync.on::before{background:var(--live)!important}
+  .banner{background:var(--warn-bg); border:1px solid var(--warn-border); color:var(--warn-ink); border-radius:10px; padding:10px 14px; margin:0 0 12px; font-size:.9rem}
+  .grp-btns{display:inline-flex; gap:6px; flex-wrap:nowrap; justify-content:flex-end; margin-left:auto}
+  .btn-main:disabled,.btn-danger:disabled{opacity:.6; cursor:wait}
+  .btn-del{color:var(--danger); border-color:var(--danger); background:transparent}
+  .btn-del:hover{background:var(--surface)}
+  .btn-danger{background:var(--danger)!important; border-color:var(--danger)!important; color:#fff!important}
+  .confirm{display:flex; flex-wrap:wrap; align-items:center; gap:8px 10px; margin:0 0 8px; padding:8px 10px; border:1px solid var(--danger); border-radius:8px; background:var(--field-bg); font-size:.86rem; font-weight:600}
+  .confirm[hidden]{display:none}
+  .grp input:disabled,.grp textarea:disabled{opacity:.7; cursor:not-allowed}
+  .add:disabled{opacity:.5; cursor:not-allowed}
+
+
+  .adminbox{display:flex; flex-wrap:wrap; align-items:center; gap:8px; margin:8px 0 10px}
+  .adminbox label{font-size:.85rem; font-weight:600}
+  .adminbox input{font:inherit; font-size:16px; color:var(--ink); background:var(--field-bg); border:1px solid var(--border-strong); border-radius:8px; padding:8px 10px; min-width:0; flex:1 1 160px; max-width:260px}
+  .adminmsg{font-size:.82rem; color:var(--danger)}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<noscript><p>This page needs JavaScript enabled.</p></noscript>
+<script>
+(function(){
+'use strict';
+var SECTIONS = [
+{ id:'A', title:'A. Research — resolved', owner:'Owner: Gibs',
+  sub:'All four open questions are closed out below, verified against the actual document.',
+  items:[
+  { id:'A1', text:'Confirm whether the contract/SOW requires wet-ink vs. digital signatures on transmittal covers and on T0006\u2019s internal documents.',
+    tags:['Alex 1:18 PM'], pg:[], pill:'Resolved', kind:'ok',
+    finding:'Marked resolved by Gibs (10/2). Supporting check: the Solicitation (W912WJ26QA007.pdf) contains no wet-ink-vs-digital signature requirement anywhere, and T0006\u2019s own cover Remarks (page 1) already state every form is \u201Cpending final wet/digital signature prior to formal acceptance\u201D \u2014 the same digital/eSignature approach already used on T0005/T0007/T0008 is consistent with the document as drafted.' },
+  { id:'A2', text:'Pin down the EM-385 requirement: does the SOW require every employee to be EM-385 <em>certified</em>, or only a minimum number, with the rest informed?',
+    tags:['Alex 1:32 PM'], pg:['p.5'], pill:'Resolved', kind:'ok',
+    finding:'<strong>Finding:</strong> The SOW does not require every employee to be EM-385 \u201Ccertified.\u201D It requires a minimum of one Level 3 SSHO (SOW \u00A75.D), a minimum-24-hr Competent Person for fall protection (\u00A75.H), at least two First-Aid/CPR-certified employees per shift (\u00A75.E), and formal OSHA-30 + 24-hr SOH certification/competency proof only for the named SSHO/CP roster (Justin Turner, Brent Van Brocklin) filed as Attachments 0006-D through 0006-L. T0006\u2019s APP Part 5, Item 1 (page 5) already says employees will be <strong>trained</strong> per EM 385-1-1 before work starts \u2014 not \u201Ccertified\u201D \u2014 which is accurate as written. <strong>No wording change needed.</strong><span class="src">Sources: Solicitation W912WJ26QA007.pdf \u00A75; T0006_Admin_and_Safety_4.pdf p.5 (ENG Form 6293, Part 5)</span>' },
+  { id:'A3', text:'Determine whether the blank employee-documentation sheets (name / occupation / signature / date) are blank by design or need to be filled out before submission.',
+    tags:['Alex 2:17 PM'], pg:['pp.11,14,17,20,23,26,29,32,35'], pill:'Resolved', kind:'ok',
+    finding:'<strong>Finding:</strong> One \u201CEmployee Documentation Sheet\u201D is built into ENG Form 6206 after each of the nine AHA phases (pp.11, 14, 17, 20, 23, 26, 29, 32, 35) \u2014 USACE\u2019s own form instruction reads: \u201CAHAs must be provided to and reviewed by all involved employees prior to starting the task. Each employee must document their review with a signature.\u201D They\u2019re meant to be signed in the field as each crew member reviews that specific phase\u2019s AHA before starting it \u2014 not filled out at submittal time. <strong>Leave them blank; no action needed.</strong><span class="src">Source: T0006_Admin_and_Safety_4.pdf, \u201CEmployee Documentation Sheet\u201D instruction</span>' },
+  { id:'A4', text:'Confirm the real asphalt-shingle square footage \u2014 document reads ~8,000 sq ft; Alex recalls 5,000\u20136,000.',
+    tags:['Alex 1:27 PM'], pg:['p.3, Line 5'], pill:'Resolved', kind:'ok',
+    finding:'<strong>Finding:</strong> The aerial sketch report (40 Academy Drive, 10/27/25) splits the roof by pitch: 57.92 squares at 7/12 (sloped shingle area) = <strong>5,792 SF</strong>, and 12.62 squares at 0/12 (flat) = 1,262 SF, which matches the \u201C~1,200 SF EPDM\u201D figure already correct elsewhere in the document. The real shingle-only area is ~5,792 SF \u2014 matching Alex\u2019s recollection. The \u201C~8,000 SF\u201D in the document (Line 5, page 3, and repeated on pp.7, 23, 26, 51) looks like the sketch report\u2019s total-roof-with-waste figure (70.54 actual squares up to 84.65 at +20% shingle-ordering waste = 7,054\u20138,465 SF) misapplied to the shingle line. <strong>Change \u201C~8,000 SF\u201D to \u201C~5,800 SF\u201D everywhere it appears.</strong><span class="src">Source: \u201C40 Academy Drive - Sketch Order Report.pdf,\u201D Measurements + Pitch tables</span>' }
+  ]},
+{ id:'B', title:'B. Needs a team decision', owner:'Owner: Zak / Justin / Brent / Earl / Alex',
+  sub:'The \u201Cpow wow\u201D Alex asked for. Several items turned out to already be handled consistently in the document \u2014 those are marked so the team isn\u2019t re-litigating settled ground. What\u2019s left genuinely needs the people who\u2019ll be on the roof.',
+  items:[
+  { id:'B1', text:'Alternate SSHO designation letter: include it in T0006 now, or hold it for a separate cover submission later? The cover currently defers it.',
+    tags:['Alex 1:19 PM'], pg:['p.1'], kind:'flag',
+    finding:'Page 1 Remarks currently read: \u201C\u2026the Alternate SSHO designation letter for Brent Van Brocklin to follow separately.\u201D Still an open call \u2014 if the team wants it in now, Brent\u2019s signed ENG Form 6282 needs to be added as a second page to Attachment 0006-C before submission.' },
+  { id:'B2', text:'Reconcile the fall-protection/material-handling narrative into one consistent story across every page it appears.',
+    tags:['Alex 1:40\u20132:01 PM'], pg:['pp.14,17,18,29,32,35'], pill:'Mostly already consistent', kind:'ok',
+    finding:'<strong>Finding:</strong> The document is already internally consistent on this: the staircase scaffold is explicitly \u201CNOT a work platform\u201D (stated on pp.14, 18, 35) \u2014 access/hoisting only; GuardLock hard rail is explicitly confined to the flat EPDM roof (pp.17\u201318, 29), stays installed through gutter/fascia work (Phase 9), and is removed \u201Conly after all gutter/fascia work complete and accepted\u201D (p.35) \u2014 matching Justin\u2019s read that GuardLock only fits on the EPDM section. <strong>One small wording mismatch:</strong> page 32 says GuardLock is \u201Cremoved ONLY after all EPDM and edge flashing complete,\u201D which reads as a different (earlier) removal trigger than page 35\u2019s gutter/fascia-complete language. Recommend editing p.32 to match p.35 so Travis doesn\u2019t read two different removal points. See D9.' },
+  { id:'B3', text:'Confirm the fiberglass ladder Justin mentioned (new unit at the Rocky Hill shop) is the one actually going to site.',
+    tags:['Alex 1:42 PM / Justin 1:43 PM'], pg:['pp.7,14,18,23,26,29,32,35'], kind:'flag',
+    finding:'Document already specifies \u201Cfiberglass ONLY, no aluminum or wood,\u201D Type IA 300 lb, on eight separate pages \u2014 so the written requirement is solid. What\u2019s still open is the real-world confirmation that the specific Rocky Hill unit is staged on site before work starts.' },
+  { id:'B4', text:'Decide the respirator policy explicitly: mandatory N-95 (requires medical exams + fit testing) vs. voluntary use under 4 hrs/day (requires neither).',
+    tags:['Alex 1:50 PM, 1:58 PM'], pg:['pp.7,18,23,26,29,32,35'], kind:'flag',
+    finding:'Current language leans \u201Cmandatory\u201D without saying so explicitly: the PPE table lists \u201CN95+ respirator (chimney/masonry work)\u201D as PPE Required (repeated on 7 pages), and page 32\u2019s VOC-exposure line says \u201Crespirator required per SDS guidance.\u201D As written, this likely crosses the OSHA threshold Alex described, triggering medical exams + fit testing. Team needs to pick one policy and make every PPE line and the p.32 VOC line say the same thing.' },
+  { id:'B5', text:'Confirm whether a HEPA-shroud grinder will be used for chimney mortar grinding \u2014 ties into the respirator decision (silica exposure).',
+    tags:['Alex 1:37 PM'], pg:['p.8'], kind:'flag',
+    finding:'The document is already transparent about this gap: Part 11 (page 8) marks the Silica Compliance Plan as \u201COption 2 \u2014 written plan to be finalized before Phase 4,\u201D correctly disclosing it\u2019s not done yet. The real action is operational, not a document fix: decide on the shroud and actually produce that written plan before chimney work starts.' },
+  { id:'B6', text:'Confirm a licensed electrician will handle the rooftop ventilation/exhaust-fan electrical connection.',
+    tags:['Alex 1:38 PM, 1:53 PM / Justin 1:53 PM'], pg:['pp.23,26'], pill:'Document already correct', kind:'ok',
+    finding:'Page 23 already states \u201Clicensed electrician verifies de-energized\u201D and page 26 states \u201Clicensed electrician performs all fan/intake connections\u201D \u2014 the document language is fine as written. What\u2019s left is for Zak to confirm who (a named sub, if one\u2019s lined up) is actually doing it, for the team\u2019s own planning \u2014 no document change required.' },
+  { id:'B7', text:'Confirm with Brent/Justin whether to adapt the existing RAW written respiratory protection program for this site, or build a new one.',
+    tags:['Alex 1:36 PM'], pg:['p.8'], kind:'flag',
+    finding:'Also already disclosed honestly in Part 11 (page 8): Respiratory Protection Program is marked \u201COption 2 \u2014 written program to be finalized before Phase 4.\u201D Document wording is fine; the real task is producing the actual program (adapted from RAW or new) and having it physically on site before Phase 4 starts.' },
+  { id:'B8', text:'Confirm demolition debris is actually hand-lowered via scaffold hand lines (not thrown into dumpsters/chutes).',
+    tags:['Alex 1:56\u20131:57 PM'], pg:['pp.29,32'], pill:'Document already correct', kind:'ok',
+    finding:'Already explicit in the document: page 29 \u2014 \u201CAll demolition debris lowered via scaffold hand lines \u2014 never thrown over guardrail\u201D; page 32 \u2014 \u201CAll materials raised via scaffold hand lines \u2014 no throwing.\u201D No document change needed; just make sure the crew actually follows it on site.' }
+  ]},
+{ id:'C', title:'C. Personnel & certificates', owner:'Owner: Gibs + Alex', sub:'',
+  items:[
+  { id:'C1', text:'Remove the \u201Cno longer with the company / removed\u201D language about Jeremy Tracy, Andre Rivera, and Jonathan O\u2019Coin.',
+    tags:['Alex 1:20 PM'], pg:['p.2'], kind:'flag',
+    finding:'Exact location found \u2014 page 2, Attachment 0006-L note: <code>\u201CJeremy Tracy and Andre Rivera are no longer with the company and have been removed; Jonathan O\u2019Coin was previously removed for the same reason.\u201D</code> Replace with a neutral listing of the current cert roster only, with no commentary on former personnel.' },
+  { id:'C2', text:'Confirm Jeremy Tracy\u2019s current employment status \u2014 Alex believes he may still be with the company. Don\u2019t drop his EM-385 cert if so.',
+    tags:['Alex 1:21 PM'], pg:['p.2'] },
+  { id:'C3', text:'Confirm the actual status of Andre Rivera and Jonathan O\u2019Coin \u2014 verify whether they were really removed or the characterization at page 2 is simply wrong.',
+    tags:['Alex 2:06 PM'], pg:['p.2'] },
+  { id:'C4', text:'On-file EM-385 certs confirmed; missing Jeremy (Tracy) and Jason Spencer \u2014 Alex\u2019s take is these aren\u2019t required since neither is going, but worth keeping as future backups.',
+    tags:['Alex 2:06\u20132:09 PM'], pg:['p.2'], pill:'Confirmed in doc', kind:'ok',
+    finding:'Page 2 (Attachment 0006-L) confirms the roster exactly as Alex described: Earl O\u2019Garro, Alexander Salvagno, Justin Turner, Brent Van Brocklin, Stephen Audet, and Wilson Trabal Figueroa all have current certs on file. Jeremy (Tracy) and Jason Spencer are not included. Decision (not going onsite, keep as future backups) stands \u2014 no document error here beyond the C1 wording fix.' },
+  { id:'C5', text:'Add the missing signatures \u2014 the document is missing wet/digital signatures in multiple places.',
+    tags:['Alex 2:06 PM'], pg:['p.3','p.38'], kind:'flag',
+    finding:'Two spots found blank: APP Part 1 (page 3) has three unsigned blocks \u2014 Plan Preparer (Brent), Plan Approver (Alex), Plan Concurrence (Justin); and the SSHO Designation Letter (page 38) has signature lines for Brent and Justin that are present but need the date fixed (see D7) and a real signature applied.' }
+  ]},
+{ id:'D', title:'D. Document corrections', owner:'Owner: Gibs \u2014 once A & B are resolved', sub:'',
+  items:[
+  { id:'D1', text:'APP Part 2, Item 3 (Estimated Project Start Date): currently 02/04/2026 \u2014 stale/past. Change to the real calendar date for \u201Cnext Tuesday.\u201D',
+    tags:['Alex 1:24 PM'], pg:['p.3'], kind:'ok',
+    finding:'\u201CNext Tuesday\u201D from Alex\u2019s 10/2 message is <strong>10/06/2026</strong> \u2014 confirm this is still accurate at the time of actual resubmission before locking it in.' },
+  { id:'D2', text:'APP Part 2, Item 5 (Line 5) scope description: strip warranty-years/wind-speed references; fix the shingle sq ft; add HVAC curb replacement; drop \u201Cfull\u201D from gutter/fascia/soffit unless confirmed.',
+    tags:['Alex 1:27 PM'], pg:['p.3'], kind:'ok',
+    finding:'Current text (page 3): <code>\u201CReplaces ~8,000 SF sloped asphalt shingle roof (Owens Corning Platinum Preferred, 150 MPH, 25-yr warranty) and ~1,200 SF flat EPDM roof (90-mil fully adhered, 120 MPH, 30-yr warranty); includes chimney restoration (2 chimneys), lightning protection system removal/reinstallation, exhaust fan and intake replacement, full gutter/fascia/soffit replacement.\u201D</code> Needed changes: remove both warranty/wind-speed parentheticals; change \u201C~8,000 SF\u201D to \u201C~5,800 SF\u201D (A4); add HVAC curb replacement (currently absent anywhere in the document \u2014 confirmed by search); drop \u201Cfull\u201D before gutter/fascia/soffit unless the team confirms it\u2019s a full replacement. Note: chimney restoration is <strong>already</strong> included here, so no addition needed there.' },
+  { id:'D3', text:'Attach the full subcontractor/supplier list as Appendix 2 \u2014 currently referenced in the text but not included \u2014 or remove the reference.',
+    tags:['Alex 1:29 PM, 2:12 PM'], pg:['p.4','p.10'], kind:'flag',
+    finding:'<strong>Internal contradiction found:</strong> Part 4, Item 8 (page 4) says \u201CA list of all known subcontractor(s) and supplier(s) are listed in Appendix 2\u201D \u2014 marked <strong>Yes</strong>. But Part 13 (page 10, Required Appendices) marks Appendix 2 as <strong>No</strong> \u2014 not attached. These two answers can\u2019t both be right; fix by either attaching the actual list to Appendix 2 and marking Part 13 Yes, or correcting Part 4 Item 8 to No if it genuinely isn\u2019t ready. See D9 for the matching Appendix 3/4 issue.' },
+  { id:'D4', text:'Attach the project map as Appendix 1 \u2014 currently referenced but not included \u2014 or remove the reference.',
+    tags:['Alex 2:12 PM'], pg:['p.3','p.10'], kind:'ok',
+    finding:'Page 3 references \u201Cattach map in Appendix 1\u201D; Part 13 (page 10) confirms Appendix 1 is marked No \u2014 genuinely not attached. Attach a site map or remove the reference.' },
+  { id:'D5', text:'Remove page 44 \u2014 a stale notice that Alex\u2019s temporary OSHA-30 card expires in 90 days. His permanent card is already included elsewhere.',
+    tags:['Alex 2:11 PM'], pg:['p.44'], kind:'ok',
+    finding:'Confirmed exactly as described: page 44 is the 360training.com \u201Cyour certificate of completion is your temporary card\u2026valid for 90 days\u201D notice attached after Alex\u2019s OSHA-30 completion certificate (page 43). Delete page 44; the OSHA-30 completion certificate on page 43 already satisfies the requirement.' },
+  { id:'D6', text:'Update the Written Fall Protection Program\u2019s date \u2014 currently March 9, 2026, which predates Brent\u2019s employment.',
+    tags:['Alex 2:09 PM'], pg:['p.51'], kind:'ok',
+    finding:'Confirmed: page 51 memo header reads \u201CDATE: March 9, 2026\u201D \u2014 the same stale template date as the AHA signature blocks (see D7). Update to a current, accurate date.' },
+  { id:'D7', text:'Audit every signature block in T0006 \u2014 all dated 03/09/26. Correct every one to an accurate, current date before resubmission.',
+    tags:['Alex 1:53 PM'], pg:['pp.12,15,18,21,24,27,30,33,36,38,51'], kind:'ok',
+    finding:'<strong>12 stale dates found, all reading 03/09/2026 or \u201CMarch 9, 2026\u201D:</strong> Zak\u2019s \u201CApproval Authority\u201D digital-signature block at the end of each of the 9 AHA phases (pages 12, 15, 18, 21, 24, 27, 30, 33, 36); the SSHO Designation Letter\u2019s two signature dates for Brent and Justin (page 38); and the Fall Protection Program memo date (page 51, see D6). All trace back to the same reused template date \u2014 update every one.' },
+  { id:'D8', text:'Correct the APP\u2019s EM-385 training answer once A2 is resolved.',
+    tags:['Alex 1:32 PM'], pg:['p.5'], pill:'No change needed', kind:'ok',
+    finding:'Per A2: Part 5 Item 1 (page 5) says employees are <em>trained</em>, not \u201Ccertified\u201D \u2014 accurate as written. Leave the \u201CYes\u201D as-is.' },
+  { id:'D9', text:'New \u2014 align the Required Appendices checklist (Part 13) with what\u2019s actually attached.',
+    tags:[], pg:['p.10'], kind:'flag',
+    finding:'Part 13 (page 10) marks <strong>all six</strong> appendices \u201CNo\u201D \u2014 including Appendix 3 (Personal Qualifications) and Appendix 4 (Activity Hazard Analysis), even though the certs (Attachments 0006-D through 0006-L) and the AHA (Attachment 0006-B) are both actually in the package. Only Appendix 1 (map) and Appendix 2 (subcontractor list) are genuinely missing. Fix the checklist to mark Appendix 3 and 4 \u201CYes\u201D to match reality, and resolve Appendix 1/2 per D3/D4. Also fix the small B2 wording mismatch on page 32 (GuardLock removal trigger) while doing this pass.' }
+  ]},
+{ id:'E', title:'E. Final production', owner:'Owner: Gibs', sub:'',
+  items:[
+  { id:'E1', text:'Roll every confirmed change from Sections B, C, and D into the T0006 document.', tags:[], pg:[] },
+  { id:'E2', text:'Add today\u2019s date to the transmittal cover (page 1) and apply Zak\u2019s eSignature at the bottom \u2014 same treatment already used on T0005 / T0007 / T0008.', tags:[], pg:[] },
+  { id:'E3', text:'Full re-QC pass: re-check every flagged page (1, 2, 3, 4, 8, 10, 32, 38, 44, 51, plus pp.12\u201336 signature dates) to confirm the final text has no contradictions and matches what the team agreed to.', tags:[], pg:[] },
+  { id:'E4', text:'Submit T0006 \u2014 targeting Monday AM.', tags:[], pg:[] }
+  ]}
+];
+
+
+/* ================= Helpers ================= */
+function $(sel, root){ return (root || document).querySelector(sel); }
+function el(tag, attrs){
+  var e = document.createElement(tag);
+  if (attrs) Object.keys(attrs).forEach(function(k){
+    var v = attrs[k];
+    if (v === null || v === undefined || v === false) return;
+    if (k === 'class') e.className = v;
+    else if (k === 'html') e.innerHTML = v;
+    else if (k.slice(0,2) === 'on') e.addEventListener(k.slice(2), v);
+    else e.setAttribute(k, v === true ? '' : v);
+  });
+  for (var i = 2; i < arguments.length; i++){
+    [].concat(arguments[i]).forEach(function(c){
+      if (c === null || c === undefined || c === false) return;
+      e.appendChild(c.nodeType ? c : document.createTextNode(String(c)));
+    });
+  }
+  return e;
+}
+function newId(){ return Date.now().toString(36) + Math.random().toString(36).slice(2, 8); }
+function fmt(ts){
+  try { return new Intl.DateTimeFormat(undefined, {dateStyle:'medium', timeStyle:'short'}).format(new Date(ts)); }
+  catch(e){ return ts || ''; }
+}
+function clip(s){ s = String(s || ''); return s.length > 120 ? s.slice(0, 120) + '…' : s; }
+
+/* ================= Shared state (kept on the server, fetched every few seconds) ================= */
+var API = '/api';
+var TOKEN = '';            /* this browser's private id; lets you edit/delete your own entries */
+try { TOKEN = localStorage.getItem('t0006-token') || ''; } catch(e){}
+if (!TOKEN){
+  var arr = new Uint8Array(16); (window.crypto || window.msCrypto).getRandomValues(arr);
+  TOKEN = Array.prototype.map.call(arr, function(x){ return ('0' + x.toString(16)).slice(-2); }).join('');
+  try { localStorage.setItem('t0006-token', TOKEN); } catch(e){}
+}
+var ADMIN_KEY = '';
+try { ADMIN_KEY = sessionStorage.getItem('t0006-admin') || ''; } catch(e){}
+var readOnly = false;
+var isAdmin = false, adminEnabled = false;
+var live = false, offline = false;
+var lastWriteDone = 0;
+var recs = {};            /* responses by id */
+var hist = [];            /* newest 100 history rows */
+var containers = {};      /* item id -> .groups element */
+var statusEl, liveEl, banner, toastEl, histDlg, histList, adminBtn, adminBox, adminIn, adminMsg;
+var totalItems = 0;
+SECTIONS.forEach(function(s){ totalItems += s.items.length; });
+
+function canModify(r){
+  if (readOnly || !r) return false;
+  return isAdmin || !!r.mine;
+}
+
+/* ================= UI ================= */
+function build(){
+  var app = $('#app');
+  var wrap = el('div', {class:'wrap'});
+  wrap.appendChild(el('h1', null, 'T0006 (Admin & Safety) — Resolution Plan'));
+  wrap.appendChild(el('p', {class:'subtitle'}, 'Please add your answers, comments, or feedback under each line item. Cape Cod Canal, Contract W912WJ26PA012 — built from the 57-page T0006_Admin_and_Safety_4.pdf and the 10/2 team chat. Governing rule: T0006 only states what A1 will actually do on site.'));
+  wrap.appendChild(el('div', {class:'chips'},
+    el('span', {class:'chip'}, 'Target submission: Monday AM'),
+    el('span', {class:'chip'}, 'T0005 / T0007 / T0008: sent'),
+    el('span', {class:'chip'}, totalItems + ' line items')));
+
+  banner = el('p', {class:'banner', role:'status', hidden:true});
+  wrap.appendChild(banner);
+
+  statusEl = el('span', null, 'Loading responses…');
+  liveEl = el('span', {class:'sync', role:'status'}, 'Connecting');
+  wrap.appendChild(el('div', {class:'statusline'}, statusEl, liveEl));
+  wrap.appendChild(el('div', {class:'actions'},
+    el('button', {class:'btn', type:'button', id:'btn-history', onclick:openHistory}, 'Version history'),
+    adminBtn = el('button', {class:'btn', type:'button', id:'btn-admin', hidden:true, onclick:toggleAdmin}, 'Admin')));
+  adminBox = el('form', {class:'adminbox', hidden:true},
+    el('label', {for:'admin-key'}, 'Admin key'),
+    adminIn = el('input', {type:'password', id:'admin-key', autocomplete:'off'}),
+    el('button', {class:'btn btn-primary', type:'submit'}, 'Unlock'),
+    adminMsg = el('span', {class:'adminmsg', role:'status'}));
+  adminBox.addEventListener('submit', function(e){ e.preventDefault(); unlockAdmin(adminIn.value.trim()); });
+  wrap.appendChild(adminBox);
+
+  wrap.appendChild(el('details', {class:'howto', open:true},
+    el('summary', null, 'How this form works'),
+    el('ol', null,
+      el('li', null, 'Type your name and your answer, comment, or feedback under the line item, then tap Save. The entry locks so it can’t be changed by accident.'),
+      el('li', null, 'Need to change something? Tap Edit, make your change, and tap Save again. Tap Delete to remove your entry.'),
+      el('li', null, 'Need to add more than one response to an item? Tap “+ Add Answer/Comment/Feedback”.'),
+      el('li', null, 'Everything is shared. Entries, edits, and deletions made by anyone appear on everyone’s screen within a few seconds, with no file to send back and nothing to refresh.'),
+      el('li', null, 'You can edit or delete the entries you created on this device and browser. An admin can change any entry. “Version history” lists the latest edits and who made them.'))));
+
+  var nav = el('nav', {class:'jump', 'aria-label':'Jump to section'});
+  SECTIONS.forEach(function(s){ nav.appendChild(el('a', {href:'#sec-' + s.id}, s.title.replace(/^([A-E])\..*/, 'Section $1'))); });
+  wrap.appendChild(nav);
+
+  wrap.appendChild(el('div', {class:'callout'},
+    el('strong', null, 'Why this matters'),
+    'If T0006 commits to something the crew doesn’t actually bring or do — guardrail that isn’t on the truck, a fiberglass ladder that isn’t the one on site — Travis can shut the job down on day one. A round trip to Hartford to fix it is ~6 hours and costs roughly $5,000–$6,000 in lost crew time. Every item below exists to close that gap before submission.'));
+
+  SECTIONS.forEach(function(sec){
+    var s = el('section', {class:'sec', id:'sec-' + sec.id},
+      el('div', {class:'sec-head'}, el('h2', null, sec.title), el('span', {class:'owner'}, sec.owner)),
+      sec.sub ? el('p', {class:'sec-sub'}, sec.sub) : null);
+    var list = el('div', {class:'items'});
+    sec.items.forEach(function(it){ list.appendChild(buildItem(it)); });
+    s.appendChild(list);
+    wrap.appendChild(s);
+  });
+  wrap.appendChild(el('footer', null, 'Responses are stored in this page’s shared database and shown to everyone who opens it. Version history lists the latest 100 edits.'));
+  app.appendChild(wrap);
+
+  toastEl = el('div', {class:'toast', role:'status', 'aria-live':'polite'});
+  app.appendChild(toastEl);
+
+  histList = el('ul', {class:'hist'});
+  histDlg = el('dialog', {'aria-labelledby':'hist-title'},
+    el('div', {class:'dlg-head'},
+      el('h2', {id:'hist-title'}, 'Version history'),
+      el('button', {class:'btn', type:'button', onclick:function(){ closeDlg(histDlg); }}, 'Close')),
+    el('div', {class:'dlg-body'},
+      el('p', {class:'dlg-note'}, 'The most recent edits made to this document, newest first.'),
+      histList));
+  app.appendChild(histDlg);
+}
+
+function buildItem(it){
+  var head = el('div', {class:'item-head'},
+    el('span', {class:'num'}, it.id),
+    el('p', {class:'item-text', html:it.text}),
+    it.pill ? el('span', {class:'pill'}, it.pill) : null);
+  var art = el('article', {class:'item', id:'item-' + it.id, 'data-item':it.id}, head);
+  var tags = (it.tags || []).map(function(t){ return el('span', {class:'tag'}, t); })
+    .concat((it.pg || []).map(function(p){ return el('span', {class:'tag pg'}, p); }));
+  if (tags.length) art.appendChild(el('div', {class:'tags'}, tags));
+  if (it.finding) art.appendChild(el('div', {class:'finding ' + (it.kind || ''), html:it.finding}));
+
+  var groups = el('div', {class:'groups'});
+  containers[it.id] = groups;
+  var addBtn = el('button', {class:'add', type:'button', onclick:function(){
+    var g = makeGroup(it.id, null); groups.appendChild(g); autosize($('.f-text', g)); $('.f-name', g).focus();
+  }}, '+ Add Answer/Comment/Feedback');
+  art.appendChild(el('div', {class:'resp'}, groups, addBtn));
+  groups.appendChild(makeGroup(it.id, null));
+  return art;
+}
+
+function autosize(t){ t.style.height = 'auto'; t.style.height = Math.max(44, t.scrollHeight + 2) + 'px'; }
+function wirePlaceholder(inp){
+  inp.addEventListener('focus', function(){ inp.placeholder = ''; });
+  inp.addEventListener('blur', function(){ if (!inp.value) inp.placeholder = inp.dataset.ph; });
+}
+
+function makeGroup(itemId, rec){
+  var nameIn = el('input', {type:'text', class:'f-name', placeholder:'Name', 'data-ph':'Name', 'aria-label':'Name (' + itemId + ')', autocomplete:'off', maxlength:'80'});
+  var textIn = el('textarea', {class:'f-text', rows:'1', placeholder:'Answer/Comment/Feedback', 'data-ph':'Answer/Comment/Feedback', 'aria-label':'Answer, comment or feedback (' + itemId + ')', maxlength:'4000'});
+  var btn = el('button', {class:'btn-mini btn-main', type:'button'}, 'Save');
+  var del = el('button', {class:'btn-mini btn-del', type:'button', hidden:true}, 'Delete');
+  var meta = el('div', {class:'grp-meta'});
+  var err = el('p', {class:'grp-err', role:'alert'});
+  var yes = el('button', {class:'btn-mini btn-danger', type:'button'}, 'Yes, delete');
+  var no = el('button', {class:'btn-mini', type:'button'}, 'Keep it');
+  var ask = el('div', {class:'confirm', hidden:true, role:'alertdialog'},
+    el('span', null, 'Delete this entry for everyone?'), yes, no);
+  var grp = el('div', {class:'grp', 'data-state':'draft'},
+    el('div', {class:'grp-head'},
+      el('span', {class:'grp-label'}, 'Answers/Comments/Feedback'),
+      el('span', {class:'grp-btns'}, btn, del)),
+    el('div', {class:'grp-fields'}, nameIn, textIn), ask, meta, err);
+  wirePlaceholder(nameIn); wirePlaceholder(textIn);
+  textIn.addEventListener('input', function(){ autosize(textIn); err.textContent = ''; });
+  nameIn.addEventListener('input', function(){ err.textContent = ''; });
+  btn.addEventListener('click', function(){ onMain(itemId, grp); });
+  del.addEventListener('click', function(){ onDeleteButton(itemId, grp); });
+  yes.addEventListener('click', function(){ doDelete(itemId, grp); });
+  no.addEventListener('click', function(){ ask.hidden = true; });
+  if (rec) fillLocked(grp, rec);
+  else applyMode(grp);
+  return grp;
+}
+
+/* Reflect state + permissions on one group's buttons and fields. */
+function applyMode(grp){
+  var st = grp.dataset.state, rec = grp._rec;
+  var n = $('.f-name', grp), t = $('.f-text', grp), btn = $('.btn-main', grp), del = $('.btn-del', grp);
+  var locked = st === 'locked';
+  n.readOnly = locked; t.readOnly = locked;
+  if (st === 'draft'){
+    n.disabled = readOnly; t.disabled = readOnly;
+    btn.hidden = readOnly; btn.textContent = 'Save';
+    del.hidden = readOnly; del.textContent = 'Discard';
+  } else {
+    n.disabled = false; t.disabled = false;
+    var mine = canModify(rec);
+    btn.hidden = !mine; btn.textContent = locked ? 'Edit' : 'Save';
+    del.hidden = !mine; del.textContent = 'Delete';
+  }
+  btn.setAttribute('aria-label', btn.textContent + ' response');
+  del.setAttribute('aria-label', del.textContent + ' response');
+  $('.confirm', grp).hidden = true;
+}
+function setState(grp, st){ grp.dataset.state = st; applyMode(grp); }
+
+function fillLocked(grp, r){
+  grp._rec = r; grp.dataset.gid = r.id;
+  var n = $('.f-name', grp), t = $('.f-text', grp);
+  n.value = r.name || ''; t.value = r.text || ''; n.placeholder = ''; t.placeholder = '';
+  setState(grp, 'locked');
+  var edited = r.updatedAt && r.createdAt && r.updatedAt !== r.createdAt;
+  $('.grp-meta', grp).textContent = (edited ? 'Edited by ' : 'Saved by ') + (r.name || 'Unknown') + ' · ' + fmt(r.updatedAt || r.createdAt);
+  $('.grp-err', grp).textContent = '';
+  autosize(t);
+}
+
+function showErr(grp, msg){ $('.grp-err', grp).textContent = msg; }
+
+/* ================= Server calls ================= */
+function headers(){
+  var h = {'content-type':'application/json', 'x-client-token':TOKEN};
+  if (ADMIN_KEY) h['x-admin-key'] = ADMIN_KEY;
+  return h;
+}
+async function api(method, body){
+  var res = await fetch(API, {method:method, headers:headers(), body: body ? JSON.stringify(body) : undefined, cache:'no-store'});
+  var data = null; try { data = await res.json(); } catch(e){}
+  if (!res.ok){ var err = new Error('http ' + res.status); err.code = (data && data.error) || String(res.status); throw err; }
+  return data;
+}
+
+/* ================= Actions ================= */
+async function onMain(itemId, grp){
+  if (readOnly) return;
+  var st = grp.dataset.state;
+  var n = $('.f-name', grp), t = $('.f-text', grp);
+  if (st === 'locked'){
+    setState(grp, 'editing');
+    $('.grp-meta', grp).textContent = 'Editing — tap Save when done.';
+    t.focus(); var len = t.value.length; try { t.setSelectionRange(len, len); } catch(e){}
+    return;
+  }
+  var name = n.value.trim(), text = t.value.trim();
+  if (!name || !text){
+    showErr(grp, !name && !text ? 'Please enter your name and a response before saving.' : (!name ? 'Please enter your name before saving.' : 'Please enter a response before saving.'));
+    (!name ? n : t).focus();
+    return;
+  }
+  var gid = grp.dataset.gid, old = gid ? recs[gid] : null;
+  if (old && old.name === name && old.text === text){ fillLocked(grp, old); return; }
+  var btn = $('.btn-main', grp);
+  btn.disabled = true; grp._busy = true;
+  var isNew = !old;
+  if (isNew && !gid){ gid = newId(); grp.dataset.gid = gid; }
+  try {
+    var out = await api('POST', {action:'save', id:gid, item:itemId, name:name, text:text});
+    recs[gid] = out.record;
+    lastWriteDone = Date.now();
+    fillLocked(grp, out.record);
+    updateStatus();
+    toast(isNew ? 'Saved and shared with everyone.' : 'Changes saved and shared.');
+    poll();
+  } catch(e){
+    if (isNew) delete grp.dataset.gid;
+    showErr(grp, e.code === 'forbidden' ? 'Only the person who wrote this entry (or an admin) can change it.' :
+      'Could not save. Check your connection and try again.');
+  } finally { btn.disabled = false; grp._busy = false; }
+}
+
+function onDeleteButton(itemId, grp){
+  var st = grp.dataset.state;
+  if (st === 'draft'){            /* nothing saved yet: just discard the draft */
+    $('.f-name', grp).value = ''; $('.f-text', grp).value = '';
+    $('.f-name', grp).placeholder = 'Name'; $('.f-text', grp).placeholder = 'Answer/Comment/Feedback';
+    autosize($('.f-text', grp)); showErr(grp, '');
+    var cont = containers[itemId];
+    if (cont.children.length > 1) cont.removeChild(grp);
+    return;
+  }
+  $('.confirm', grp).hidden = false;
+  $('.btn-danger', grp).focus();
+}
+
+async function doDelete(itemId, grp){
+  var gid = grp.dataset.gid;
+  var yes = $('.btn-danger', grp); yes.disabled = true; grp._busy = true;
+  try {
+    await api('POST', {action:'delete', id:gid});
+    delete recs[gid];
+    lastWriteDone = Date.now();
+    removeGroup(itemId, grp);
+    updateStatus();
+    toast('Entry deleted for everyone.');
+    poll();
+  } catch(e){
+    $('.confirm', grp).hidden = true;
+    showErr(grp, e.code === 'forbidden' ? 'Only the person who wrote this entry (or an admin) can delete it.' :
+      'Could not delete. Check your connection and try again.');
+  } finally { yes.disabled = false; grp._busy = false; }
+}
+
+function removeGroup(itemId, grp){
+  var cont = containers[itemId];
+  if (grp.parentNode === cont) cont.removeChild(grp);
+  if (!cont.children.length) cont.appendChild(makeGroup(itemId, null));
+}
+
+/* ================= Live sync ================= */
+function syncDom(){
+  var byItem = {};
+  Object.keys(recs).forEach(function(id){ var r = recs[id]; (byItem[r.item] = byItem[r.item] || []).push(r); });
+  SECTIONS.forEach(function(sec){ sec.items.forEach(function(it){
+    var cont = containers[it.id];
+    var list = (byItem[it.id] || []).sort(function(a, b){ return String(a.createdAt).localeCompare(String(b.createdAt)); });
+    var present = {};
+    list.forEach(function(r){
+      present[r.id] = true;
+      var g = cont.querySelector('[data-gid="' + r.id + '"]');
+      if (!g){
+        g = makeGroup(it.id, r);
+        var firstDraft = [].slice.call(cont.children).filter(function(c){ return !c.dataset.gid; })[0];
+        cont.insertBefore(g, firstDraft || null);
+      } else if (g.dataset.state === 'locked' && !g._busy){
+        fillLocked(g, r);
+      } else { g._rec = r; }
+    });
+    [].slice.call(cont.children).forEach(function(g){
+      var gid = g.dataset.gid;
+      if (!gid || present[gid] || g._busy) return;
+      if (g.dataset.state === 'editing'){
+        delete g.dataset.gid; g._rec = null; g.dataset.state = 'draft'; applyMode(g);
+        showErr(g, 'This entry was deleted by someone else. Saving will add it back.');
+      } else cont.removeChild(g);
+    });
+    /* drop leftover empty drafts when real entries exist; keep one blank draft otherwise */
+    if (!cont.children.length) cont.appendChild(makeGroup(it.id, null));
+  }); });
+}
+
+function refreshModes(){
+  Object.keys(containers).forEach(function(id){
+    [].slice.call(containers[id].children).forEach(applyMode);
+  });
+  $$all('.add').forEach(function(b){ b.disabled = readOnly; });
+}
+function $$all(sel){ return [].slice.call(document.querySelectorAll(sel)); }
+
+function updateStatus(){
+  var answered = {};
+  Object.keys(recs).forEach(function(id){ answered[recs[id].item] = true; });
+  var n = Object.keys(answered).length;
+  var last = hist[0];
+  statusEl.textContent = (live ? n + ' of ' + totalItems + ' items have responses' : 'Loading responses…') +
+    (last ? ' · Last edit: ' + (last.name ? last.name + ', ' : '') + fmt(last.ts) : '');
+  liveEl.textContent = offline ? 'Offline — retrying' : (live ? 'Live' : 'Connecting');
+  liveEl.classList.toggle('on', live && !offline);
+  adminBtn.hidden = !adminEnabled;
+  adminBtn.textContent = isAdmin ? 'Admin: on' : 'Admin';
+}
+
+function showBanner(msg){ banner.textContent = msg; banner.hidden = !msg; }
+
+/* ================= History dialog / toast ================= */
+var toastTimer;
+function toast(msg){
+  toastEl.textContent = msg; toastEl.classList.add('show');
+  clearTimeout(toastTimer); toastTimer = setTimeout(function(){ toastEl.classList.remove('show'); }, 2800);
+}
+function openDlg(d){ if (typeof d.showModal === 'function') d.showModal(); else d.setAttribute('open', ''); }
+function closeDlg(d){ if (typeof d.close === 'function') d.close(); else d.removeAttribute('open'); }
+function renderHistory(){
+  histList.innerHTML = '';
+  if (!hist.length) histList.appendChild(el('li', {class:'empty'}, 'No edits yet.'));
+  hist.forEach(function(h){
+    histList.appendChild(el('li', {class:'hist-row'},
+      el('div', {class:'hist-top'},
+        el('span', {class:'hist-act' + (h.action === 'Deleted' ? ' del' : '')}, h.action + (h.item ? ' · ' + h.item : '')),
+        el('time', {datetime:h.ts}, fmt(h.ts))),
+      h.name ? el('div', {class:'hist-who'}, (h.action === 'Deleted' ? 'Entry by ' : '') + h.name) : null,
+      h.snippet ? el('div', {class:'hist-snip'}, '“' + h.snippet + '”') : null));
+  });
+}
+function openHistory(){ renderHistory(); openDlg(histDlg); }
+
+/* ================= Admin ================= */
+function toggleAdmin(){
+  if (isAdmin){ ADMIN_KEY = ''; try { sessionStorage.removeItem('t0006-admin'); } catch(e){} isAdmin = false; refreshModes(); updateStatus(); toast('Admin mode off.'); return; }
+  adminBox.hidden = !adminBox.hidden; if (!adminBox.hidden) adminIn.focus();
+}
+async function unlockAdmin(key){
+  if (!key) return;
+  ADMIN_KEY = key; adminMsg.textContent = 'Checking…';
+  try {
+    var data = await api('GET');
+    if (data.admin){
+      try { sessionStorage.setItem('t0006-admin', key); } catch(e){}
+      adminMsg.textContent = ''; adminBox.hidden = true; adminIn.value = '';
+      applyData(data); toast('Admin mode on. You can edit or delete any entry.');
+    } else { ADMIN_KEY = ''; adminMsg.textContent = 'That key is not correct.'; }
+  } catch(e){ ADMIN_KEY = ''; adminMsg.textContent = 'Could not check the key. Try again.'; }
+}
+
+/* ================= Polling ================= */
+function applyData(data){
+  recs = {};
+  data.responses.forEach(function(r){ recs[r.id] = r; });
+  hist = data.history || [];
+  isAdmin = !!data.admin; adminEnabled = !!data.adminEnabled;
+  if (!isAdmin && ADMIN_KEY){ ADMIN_KEY = ''; try { sessionStorage.removeItem('t0006-admin'); } catch(e){} }
+  live = true; offline = false;
+  syncDom(); updateStatus(); refreshModes();
+  if (histDlg.open) renderHistory();
+}
+var polling = false;
+async function poll(){
+  if (polling) return; polling = true;
+  var started = Date.now();
+  try {
+    var data = await api('GET');
+    if (lastWriteDone <= started) { applyData(data); showBanner(''); }
+  } catch(e){
+    offline = true; updateStatus();
+    if (!live) showBanner('Could not reach the server. The page will keep retrying. If this persists, the site’s function may not be deployed yet.');
+  } finally { polling = false; }
+}
+
+build();
+updateStatus();
+poll();
+setInterval(function(){ if (!document.hidden) poll(); }, 5000);
+document.addEventListener('visibilitychange', function(){ if (!document.hidden) poll(); });
+window.addEventListener('focus', poll);
+window.addEventListener('beforeunload', function(e){
+  var dirty = $$all('.grp[data-state="draft"], .grp[data-state="editing"]').some(function(g){ return $('.f-name', g).value.trim() || $('.f-text', g).value.trim(); });
+  if (dirty){ e.preventDefault(); e.returnValue = ''; }
+});
+
+})();
+</script>
+</body>
+</html>
